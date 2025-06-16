@@ -14,9 +14,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active: "prod"
+
 
 build:
-  version: "v0"
+  version: "v3"
 
 accounts:
   message: "welcome to Accounts Microservice"
