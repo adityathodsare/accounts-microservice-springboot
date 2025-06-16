@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,8 @@ public class AccountsController {
         this.accountService = accountService;
     }
 
+    @Autowired
+    private Environment environment;
 
     // using @Value annotation to get build version from application.yml
     @Value("${build.version}")
@@ -184,6 +188,28 @@ public class AccountsController {
                 .body(buildVersion);
     } // return build version from application.yml file>
 
-
-
+    @Operation(
+            summary = "fetch version of java REST API",
+            description = "REST API to fetch version of java"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponceDTO.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+            .body(environment.getProperty("JAVA_HOME"));
+    }
 }
