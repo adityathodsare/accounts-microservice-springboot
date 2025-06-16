@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,9 @@ public class AccountsController {
     }
 
 
+    // using @Value annotation to get build version from application.yml
+    @Value("${build.version}")
+    private String buildVersion;
 
     @Operation(
             summary = "Create account",
@@ -154,6 +158,31 @@ public class AccountsController {
                     .body(new ResponceDTO(AccountsConstants.STATUS_500  , AccountsConstants.MESSAGE_500));
         }
     }
+
+    @Operation(
+            summary = "fetch build version REST API",
+            description = "REST API to fetch build version"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponceDTO.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/version")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buildVersion);
+    } // return build version from application.yml file>
 
 
 
