@@ -1,5 +1,6 @@
 package com.microBank.microAccounts.controller;
 
+import com.microBank.microAccounts.DTO.AccountsContactDto;
 import com.microBank.microAccounts.DTO.CustomerDTO;
 import com.microBank.microAccounts.DTO.ErrorResponceDTO;
 import com.microBank.microAccounts.DTO.ResponceDTO;
@@ -31,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api", produces =( MediaType.APPLICATION_JSON_VALUE))
 @Validated
 public class AccountsController {
+
+    @Autowired
+    private AccountsContactDto accountsContactDto;
 
     private final IAccountService accountService ;
 
@@ -211,5 +215,31 @@ public class AccountsController {
         return ResponseEntity
                 .status(HttpStatus.OK)
             .body(environment.getProperty("JAVA_HOME"));
+    }
+
+
+    @Operation(
+            summary = "fetch the contact info related to this microservice",
+            description = "REST API to fetch the contact info related to this microservice"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponceDTO.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/getcontactinfo")
+    public ResponseEntity<AccountsContactDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountsContactDto);
     }
 }
