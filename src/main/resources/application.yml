@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  application:
+    name: "accounts"
+  profiles:
+    active: "default"
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -15,21 +19,6 @@ spring:
       ddl-auto: update
     show-sql: true
   config:
-    import:
-      - "application_qa.yml"
-      - "application_prod.yml"
-  profiles:
-    active: "prod"
+    import: "optional:configserver:http://localhost:8071/"
 
 
-build:
-  version: "v3"
-
-accounts:
-  message: "welcome to Accounts Microservice"
-  contactDetails:
-    email: "thodsareaditya@gmail.com"
-    mobileNumber: "1234567890"
-  callSupport:
-    - "thodsareaditya@gmail.com"
-    - "1234567890"
